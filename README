@@ -1,0 +1,55 @@
+		README file for the htable package
+
+
+See the file Changelog for a release history and bug-fix notes.
+See the file TODO for things that still need doing.
+
+
+PACKAGE OVERVIEW:
+
+	You should be reading this file in a directory called: htable-x.x,
+	where x.x is the current version number. There should be two 
+	subdirectories : 'src' and 'tst'. 
+	The hash table API sources are found in one single file: src/htable.h.
+        Detailed documentation comes in the manpage htable.3 found in the 'src'
+	directory. 
+
+
+DOCUMENTATION:
+
+        As this package is primarily intended to C developers, the documentation
+        is only available as a manpage (file htable.3 in 'src' directory). To
+        view it, you can use a command such as:
+
+             groff -t -man -Tascii htable.3 | less
+
+
+TESTS:
+        
+        The package comes with automated tests found in the 'tst' directory,
+        which can be run by using the following command (you may need to replace
+        'make' by 'gmake' on some systems):
+
+              cd tst && make test
+
+        Here is a description of the performed tests:
+             
+             test0: hash table static initialization
+             test1: hash table dynamic initialization
+             test2: simple insertion into hash table
+             test3: lookup in hash table
+             test4: hash table scan
+             test5: removing of item from hash table
+             test6: hash table passed to a subroutine
+             test7: multiple insertion of same element
+
+
+LICENSE:
+
+        This package comes with a two-clause BSD license. You can find the text
+        for this license at the beginning of htable.h.
+
+
+AUTHOR:
+
+	Frederic Culot  <frederic@culot.org>

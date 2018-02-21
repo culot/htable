@@ -1,0 +1,8 @@
+************************************
+* Hash table static initialization *
+************************************
+Hash Table init done:
+         size : 10000 (awaited: 10000)
+        items : 0 (should be 0)
+   collisions : 0.0 % (should be 0.0 %)
+         load : 0.0 % (should be 0.0 %)

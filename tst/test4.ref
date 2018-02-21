@@ -1,0 +1,21 @@
+************************
+* Hash Table scan test *
+************************
+Entry:
+    name: "person4"
+   phone: "555-4444"
+Entry:
+    name: "unknown"
+   phone: "555-0000"
+Entry:
+    name: "friend1"
+   phone: "555-1111"
+Entry:
+    name: "police"
+   phone: "113"
+Entry:
+    name: "friend2"
+   phone: "555-2222"
+Entry:
+    name: "person3"
+   phone: "555-3333"

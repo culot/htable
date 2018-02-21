@@ -1,0 +1,5 @@
+**************************
+* Hash Table remove test *
+**************************
+Removed element: "person3" => "555-3333" (should be "person3" => "555-3333")
+Number of items in resulting table: 5 (should be 5)

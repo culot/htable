@@ -1,0 +1,13 @@
+
+ htable TODO list
+ ----------------
+
+Here are listed the modifications I will perform in future releases. 
+Feel free to send me an email if you would like to see a feature added 
+which does not appear in this list.
+
+
+  *  Add new hash functions
+  *  Add support for hash table serialization (with saving and reloading of
+     serialized data)
+  *  Add support for hash table expansion

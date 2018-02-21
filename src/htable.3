@@ -1,0 +1,392 @@
+.\" 	$Id: htable.3,v 1.3 2010/08/19 04:42:31 culot Exp $
+.\"
+.\" Copyright (c) 2008, 2010 Frederic Culot <frederic@culot.org>
+.\" All rights reserved.
+.\"
+.\" Redistribution and use in source and binary forms, with or without
+.\" modification, are permitted provided that the following conditions
+.\" are met:
+.\"
+.\"      - Redistributions of source code must retain the above
+.\"        copyright notice, this list of conditions and the
+.\"        following disclaimer.
+.\"
+.\"      - Redistributions in binary form must reproduce the above
+.\"        copyright notice, this list of conditions and the
+.\"        following disclaimer in the documentation and/or other
+.\"        materials provided with the distribution.
+.\"
+.\" THIS SOFTWARE IS PROVIDED BY THE COPYRIGHT HOLDERS AND CONTRIBUTORS
+.\" "AS IS" AND ANY EXPRESS OR IMPLIED WARRANTIES, INCLUDING, BUT NOT
+.\" LIMITED TO, THE IMPLIED WARRANTIES OF MERCHANTABILITY AND FITNESS FOR
+.\" A PARTICULAR PURPOSE ARE DISCLAIMED. IN NO EVENT SHALL THE COPYRIGHT
+.\" OWNER OR CONTRIBUTORS BE LIABLE FOR ANY DIRECT, INDIRECT, INCIDENTAL,
+.\" SPECIAL, EXEMPLARY, OR CONSEQUENTIAL DAMAGES (INCLUDING, BUT NOT
+.\" LIMITED TO, PROCUREMENT OF SUBSTITUTE GOODS OR SERVICES; LOSS OF USE,
+.\" DATA, OR PROFITS; OR BUSINESS INTERRUPTION) HOWEVER CAUSED AND ON ANY
+.\" THEORY OF LIABILITY, WHETHER IN CONTRACT, STRICT LIABILITY, OR TORT
+.\" (INCLUDING NEGLIGENCE OR OTHERWISE) ARISING IN ANY WAY OUT OF THE USE
+.\" OF THIS SOFTWARE, EVEN IF ADVISED OF THE POSSIBILITY OF SUCH DAMAGE.
+.\"
+.fam C
+.TH HTABLE 3 "August 19, 2010" "Version 1.2" "htable manual"
+.SH NAME
+\fBHTABLE_HEAD\fP, \fBHTABLE_ENTRY\fP, \fBHTABLE_SIZE\fP, \fBHTABLE_COUNT\fP,
+\fBHTABLE_EMPTY\fP, \fBHTABLE_COLLS\fP, \fBHTABLE_LOAD\fP, 
+\fBHTABLE_INITIALIZER\fP, \fBHTABLE_INIT\fP, 
+\fBHTABLE_PROTOTYPE\fP, \fBHTABLE_GENERATE\fP,
+\fBHTABLE_INSERT\fP, \fBHTABLE_REMOVE\fP, \fBHTABLE_LOOKUP\fP, 
+\fBHTABLE_FIRST\fP, \fBHTABLE_NEXT\fP, \fBHTABLE_FOREACH\fP, 
+implementation of hash tables.
+         
+.SH SYNOPSIS
+.nf
+\fB#include\fP "\fBhtable.h\fP"
+.P
+\fBHTABLE_HEAD\fP(\fINAME\fP, \fISIZE\fP, \fITYPE\fP);
+.P
+\fBHTABLE_ENTRY\fP(\fITYPE\fP);
+.P
+\fIsize_t\fP
+.br
+\fBHTABLE_SIZE\fP(\fIHTABLE_HEAD *head\fP);
+.P
+\fIuint32_t\fP
+.br
+\fBHTABLE_COUNT\fP(\fIHTABLE_HEAD *head\fP);
+.P
+\fIint\fP
+.br
+\fBHTABLE_EMPTY\fP(\fIHTABLE_HEAD *head\fP);
+.P
+\fIfloat\fP
+.br
+\fBHTABLE_COLLS\fP(\fIHTABLE_HEAD *head\fP);
+.P
+\fIfloat\fP
+.br
+\fBHTABLE_LOAD\fP(\fIHTABLE_HEAD *head\fP);
+.P
+\fBHTABLE_INITIALIZER\fP(\fIHTABLE_HEAD *head\fP);
+.P
+\fBHTABLE_INIT\fP(\fIHTABLE_HEAD *head\fP);
+.P
+\fBHTABLE_PROTOTYPE\fP(\fINAME\fP, \fITYPE\fP);
+.P
+\fBHTABLE_GENERATE\fP(\fINAME\fP, \fITYPE\fP, \fIKEY\fP, \fICMP\fP);
+.P
+\fIHTABLE_ENTRY *\fP
+.br
+\fBHTABLE_INSERT\fP(\fINAME\fP, \fIHTABLE_HEAD *head\fP, \fIHTABLE_ENTRY *elm\fP);
+.P
+\fIHTABLE_ENTRY *\fP
+.br
+\fBHTABLE_REMOVE\fP(\fINAME\fP, \fIHTABLE_HEAD *head\fP, \fIHTABLE_ENTRY *elm\fP); 
+.P
+\fIHTABLE_ENTRY *\fP
+.br
+\fBHTABLE_LOOKUP\fP(\fINAME\fP, \fIHTABLE_HEAD *head\fP, \fIHTABLE_ENTRY *elm\fP);
+.P
+\fIHTABLE_ENTRY *\fP
+.br
+\fBHTABLE_FIRST\fP(\fINAME\fP, \fIHTABLE_HEAD *head\fP);
+.P
+\fIHTABLE_ENTRY *\fP
+.br
+\fBHTABLE_NEXT\fP(\fINAME\fP, \fIHTABLE_HEAD *head\fP, \fIHTABLE_ENTRY *elm\fP);
+.P
+\fBHTABLE_FOREACH\fP(\fIHTABLE_ENTRY *elm\fP, \fINAME\fP, \fIHTABLE_HEAD *head\fP);
+.fi
+
+.SH DESCRIPTION
+These macros define and operate on a hash table data structure.
+The following functionalities are supported:
+.RS
+.nr step 1 1
+.IP \n[step] 4
+Insertion of a new entry in the hash table.
+.IP \n+[step]
+Retrieval of an entry in the hash table.
+.IP \n+[step]
+Removal of an entry from the hash table.
+.IP \n+[step]
+Iterating over all entries found in the hash table.
+.IP \n+[step]
+Computing the number of entries found in the hash table.
+.IP \n+[step]
+Computing the collision percentage for the hash table.
+.IP \n+[step]
+Computing the load percentage for the hash table.
+.RE
+.P
+Hash tables are ideal for applications with datasets needing a lot of adding,
+searching or removal, as those are normally constant-time operations. 
+The primary operation it supports efficiently is a lookup: given a key (e.g. a
+person's name), find the corresponding value (e.g. that person's telephone
+number). It works by transforming the key using a hash function into a hash, a
+number that is used as an index in an array to locate the desired location
+("bucket") where the values should be.
+.P
+Hash tables support the efficient insertion of new entries, in expected O(1)
+time. The time spent in searching depends on the hash function and the load of
+the hash table; both insertion and search approach O(1) time with well chosen
+values and hashes.
+
+.SH HASH TABLES
+In the macro definitions, \fITYPE\fP is the name tag of a user defined structure
+that must contain a field of type \fIHTABLE_ENTRY\fP.
+For example, to define a data structure looking like a phone book that will be
+stored in a hash table, one could write something like:
+.P
+.nf
+      struct phonebook_s {
+        char *name, *phone;
+        HTABLE_ENTRY (phonebook_s);
+      };
+.fi 
+.P
+The argument \fINAME\fP in the macro definitions is the name tag of a user
+defined structure that must be declared using the macro \fBHTABLE_HEAD\fP() as
+follows:
+.IP "" 6
+HTABLE_HEAD (NAME, SIZE, TYPE) hash_table;
+.P
+The argument \fINAME\fP has to be a unique name prefix for every hash table that
+is defined. \fISIZE\fP is the number of buckets the hash table will hold.
+A pointer to such a hash table structure could then later be defined as:
+.IP "" 6
+struct NAME *tableptr;
+.P
+Once a hash table was defined, it must be initialized using the
+\fBHTABLE_INIT\fP() macro, \fIhead\fP being a reference to this hash table.
+It is also possible to initialize it statically by using the
+\fBHTABLE_INITIALIZER\fP() macro like this:
+.P
+.nf
+      HTABLE_HEAD (NAME, SIZE, TYPE) htable = 
+        HTABLE_INITIALIZER (&htable);
+.fi
+.P
+In order to use the functions that manipulate the hash table structure, their
+prototypes need to be declared with the \fBHTABLE_PROTOTYPE\fP() macro, where
+\fINAME\fP is a unique identifier for this particular hash_table. The
+\fITYPE\fP argument is the type of the structure that is being managed by the
+hash table.
+.P
+The function bodies are generated with the \fBHTABLE_GENERATE\fP() macro, which
+must be used only once. 
+It takes the same two first arguments as the \fBHTABLE_PROTOTYPE\fP() macro, 
+and the two last arguments are the names of user-defined functions used to
+extract key information from a hash table entry and to compare two entries.
+.P
+The function used to retrieve information related to the key given a hash table
+entry must have the following prototype:
+.P
+.nf
+ void (*key) (HTABLE_ENTRY *elm, char **key, int *len);
+.fi
+.P
+where \fIelm\fP is the given pointer to the hash table entry, \fIkey\fP and
+\fIlen\fP must be filled in with respectively the pointer to the corresponding
+key and with this key's length.
+.P
+The function used to compare two hash tables entries must follow this prototype:
+.P
+.nf
+ int (*cmp) (HTABLE_ENTRY *elm1, HTABLE_ENTRY *elm2);
+.fi
+.P
+where \fIelm1\fP and \fIelm2\fP are the entries to compare.
+This function must return an integer value, being 0 in case the keys are equal,
+and a value different from 0 otherwise.
+.P
+See section EXAMPLE for possible implementations of such functions.
+.P
+The \fBHTABLE_INSERT\fP() macro inserts the element \fIelm\fP in the hash table
+pointed at by \fIhead\fP. A pointer to the element is returned in case it was
+successfully inserted. Otherwise, NULL is returned, meaning the insertion did
+not occur (e.g. the element was already stored in the hash table).
+.P
+The \fBHTABLE_REMOVE\fP() macro removes the element \fIelm\fP from the hash
+table pointed at by \fIhead\fP.
+The removed element is returned to the user so it can be freed if necessary. If
+the element was not found, NULL is returned.
+.P
+The \fBHTABLE_LOOKUP\fP() macro finds the element \fIelm\fP
+in the hash table pointed at by \fIhead\fP. The data
+corresponding to the removed element is returned to the user
+(NULL is returned in case the element was not found).
+.P
+The \fBHTABLE_FIRST\fP() and \fBHTABLE_NEXT\fP() macros can be used to traverse
+the hash table:
+.P
+.nf
+      for (elm = HTABLE_FIRST (NAME, &head); 
+           elm != NULL; 
+           elm = HTABLE_NEXT (NAME, &head, elm))
+.fi
+.P
+Or, for simplicity, one can use the \fBHTABLE_FOREACH\fP() macro:
+.P
+.IP "" 6
+HTABLE_FOREACH (elm, NAME, &head)
+.fi
+.P
+There are also some macros useful to get information about a given hash
+table:
+.P
+The \fBHTABLE_SIZE\fP() macro returns the total number of buckets contained in
+the hash table pointed at by \fIhead\fP.
+.P
+The \fBHTABLE_COUNT\fP() returns the number of items contained in the hash table
+pointed at by \fIhead\fP.
+.P
+The \fBHTABLE_COLLS\fP() returns a percentage indicating the collisions
+(e.g. when two keys hash to the same bucket) there are in the hash table pointed
+at by \fIhead\fP.
+.P
+The \fBHTABLE_LOAD\fP() macro returns a percentage indicating the load factor
+(e.g. the number of filled buckets over the total number of buckets) of the hash
+table pointed at by \fIhead\fP.
+.P
+The \fBHTABLE_EMPTY\fP() macro should be used to check wether a hash table is
+empty.
+
+.SH EXAMPLES
+The following example demonstrates how to declare a hash table. Values are
+inserted into it, and one of them is then retrieved from the hash table.
+Next, the contents of the hash table are printed, and one element is finally
+removed. Last, the total number of items contained in the hash table is
+displayed.
+.P
+.nf
+   #include <stdlib.h>
+   #include <stdio.h>
+   #include <string.h>
+
+   #include "htable.h"
+
+   #define HSIZE  100
+
+   struct book_s {
+     char *name, *phone;
+     HTABLE_ENTRY (book_s);
+   };
+
+   void
+   extract_key (struct book_s *data, char **key, int *len)
+   {
+     *key = data->name;
+     *len = strlen (data->name);
+   }
+
+   int
+   compare (struct book_s *data1, struct book_s *data2)
+   {
+     const int KEYLEN = strlen (data1->name);
+
+     if (strlen (data2->name) == KEYLEN
+         && !memcmp (data1->name, data2->name, KEYLEN))
+       return 0;
+     else
+       return 1;
+   }
+
+   int
+   main ()
+   {
+     int i;
+     struct book_s *elm;
+     struct book_s entries[] = {
+       {"friend1", "555-1111"},
+       {"friend2", "555-2222"},
+       {"person3", "555-3333"},
+       {"person4", "555-4444"}
+     };
+     const int NOENTRIES = sizeof (entries) / sizeof (struct book_s);
+
+     HTABLE_HEAD (pbook, HSIZE, book_s) htable = 
+       HTABLE_INITIALIZER (&htable);
+
+     HTABLE_GENERATE (pbook, book_s, extract_key, compare);  
+
+     for (i = 0; i < NOENTRIES; i++)
+       HTABLE_INSERT (pbook, &htable, &entries[i]);
+
+     elm = HTABLE_LOOKUP (pbook, &htable, &entries[1]);
+     printf ("friend2's Phone number is: %s\\n", elm->phone);
+
+     HTABLE_FOREACH (elm, pbook, &htable)
+       {
+         printf ("Entry:\\n");
+         printf (" name: %s\\n", elm->name);
+         printf ("phone: %s\\n", elm->phone);
+       }
+
+     elm = HTABLE_REMOVE (pbook, &htable, &entries[2]);
+
+     printf ("Number of items in hash table: %u\\n",
+             HTABLE_COUNT (&htable));
+
+     return EXIT_SUCCESS;
+   }
+.fi
+
+.SH NOTES
+If the hash table macros need to be used several times, it is advised to build
+wrappers around them, as code is inlined and executable could have its size grow
+needlessly. For example, to remove elements from a hash table and free the
+corresponding data structure associated with it, one could write the following
+function:
+.P
+.nf
+   /*
+    * Wrapper around the HTABLE_REMOVE macro.
+    *
+    * A hash table was previously defined using:
+    *    HTABLE_HEAD (my_hash, HSIZE, my_entry) htable =
+    *      HTABLE_INITIALIZER (&htable);
+    */
+   void
+   htable_free (struct my_hash *ht, struct my_entry *elm)
+   {
+     struct my_entry *removed;
+
+     removed = HTABLE_REMOVE (my_hash, ht, elm);
+     if (removed != NULL)
+       free (removed);
+   }
+.fi
+
+.SH HASH FUNCTIONS
+By default, Jenkin's hash function "LOOKUP" is used to transform a key into
+a bucket number (reference can be found in the SEE ALSO section). However, other
+hash functions are available and can be chosen at compile time by defining the
+\fIHASH_FUNCTION\fP macro.
+.P
+The following functions are available:
+.TP
+\fBHASH_JEN\fP
+The default hash function, Jenkins' Lookup hash.
+.TP
+\fBHASH_OAT\fP
+Jenkins' "One at a time" hash function.
+.P
+For example, to specify that Jenkins' "One at a time" hash function must be used
+for the "test" program, one must compile it using a command such as:
+.IP "" 3
+cc -I/path/to/htable.h -DHASH_FUNCTION=HASH_OAT -o test test.c
+.P
+To determine the best hash function for your key domain, you can use the
+\fIHTABLE_COLLS\fP and \fIHTABLE_LOAD\fP macros to compare the collisions and
+load factors obtained with the different hash functions.
+
+.SH SEE ALSO
+Bob Jenkins' work on hash functions can be found at:
+http://burtleburtle.net/bob/hash/
+.P
+Those macros were greatly inspired by the implementations of spray and red-black
+trees found in the *BSD kernels (see file /usr/src/sys/sys/tree.h).
+
+.SH AUTHORS
+\fBFrederic Culot\fP <frederic@culot.org>.

@@ -1,0 +1,23 @@
+2010-08-19  Frederic Culot  <frederic@culot.org>
+
+	* === Released 1.2 ===
+
+	* tst/Makefile: respect system-wide CC and CFLAGS, add path to
+	binaries (suggested by Dmitry Marakasov, thanks!)
+
+	* src/htable.3: manpage updated
+
+2008-11-13  Frederic Culot  <frederic@culot.org>
+
+	* === Released 1.1 ===
+
+	* src/htable.h (HTABLE_INSERT): return NULL in case the element
+	was already inserted
+
+	* src/htable.3: manpage updated
+
+	* tst/test7.c: new test to check if a multiple insert returns NULL
+
+2008-10-29  Frederic Culot  <frederic@culot.org>
+
+	* === Released 1.0 (initial release) ===
